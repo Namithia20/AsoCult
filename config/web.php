@@ -42,6 +42,14 @@ $config = [
                 ],
             ],
         ],
+        'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://@localhost:27017/AsoCultDB',
+            'options' => [
+                "username" => "yii2",
+                "password" => "yii2pass"
+            ]
+        ],
         'db' => $db,
         /*
         'urlManager' => [
