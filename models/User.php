@@ -2,35 +2,26 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\NotSupportedException;
 use yii\mongodb\ActiveRecord;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
+use yii\mongodb\Query;
 
 class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterface
 {
+
     public $id;
     public $username;
     public $password;
     public $authKey;
     public $accessToken;
+    public $email;
+    public $admin;
+    public $bloqueado;
+    public $eliminado;
 
-    // private static $users = [
-    //     '100' => [
-    //         'id' => '100',
-    //         'username' => 'admin',
-    //         'password' => 'admin',
-    //         'authKey' => 'test100key',
-    //         'accessToken' => '100-token',
-    //     ],
-    //     '101' => [
-    //         'id' => '101',
-    //         'username' => 'demo',
-    //         'password' => 'demo',
-    //         'authKey' => 'test101key',
-    //         'accessToken' => '101-token',
-    //     ],
-    // ];
 
     public static function collectionName()
     {
@@ -50,20 +41,47 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
         return [
             'id' => 'Id',
             'username'=> 'Username',
-            'password'=> 'Password'
+            'password'=> 'Password',
+            'email' => 'Email',
         ];
     }
 
     public function attributes()
     {
          return [
-        //     '_id',
-        //     'id',
-        //     'username',
-        //     'password',
-        //     'authKey',
-        //     'accessToken'
+             '_id',
+            //   'id',
+            //    'username',
+            //    'password',
+            //    'authKey',
+            //    'accessToken',
+            //    'email'
          ];
+    }
+
+    public static function registerUser($username, $email, $password)
+    {
+        $query = new Query();
+        $response = $query->select(['id'])
+            ->from('Usuario')
+            ->max('id');
+        $response++;
+
+        $values =[
+            'id' => $response,
+            'username' => $username,
+            'password'=> sha1($password),
+            'authKey' => 'test'.$response.'key',
+            'accessToken' => $response.'-token',
+            'email' => $email,
+            'admin' => false,
+            'bloqueado' => false,
+            'eliminado' => false,
+        ];
+       
+       $collection = Yii::$app->mongodb->getCollection('Usuario');
+       return $collection->insert($values);
+
     }
 
     /**
@@ -72,7 +90,6 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
     public static function findIdentity($id)
     {
         return static::findOne(['id' =>$id]);
-        //return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
     }
 
     /**
@@ -80,13 +97,6 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-       /* foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;*/
         return static::findOne(['accessToken' => $token]);
         
     }
@@ -100,13 +110,6 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
      */
     public static function findByUsername($username)
     {
-       /* foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;*/
         return static::findOne(['username' => $username]);
     }
 
@@ -142,7 +145,7 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === sha1($password);
     }
 
 
