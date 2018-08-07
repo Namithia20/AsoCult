@@ -138,4 +138,28 @@ class SiteController extends Controller
             'model' => $model,
             ]);
     }
+
+    public function actionAdministration()
+    {
+        
+        if(Yii::$app->request->post('accion') == 'lockUser' && Yii::$app->request->post('id') != null)
+        {
+           //var_dump(Yii::$app->request->post());
+            Yii::$app->user->getIdentity()->lockUnlock(Yii::$app->request->post('id'), false);
+            return $this->refresh();
+        }
+
+        if(Yii::$app->request->post('accion') == 'unlockUser' && Yii::$app->request->post('id') != null)
+        {
+            Yii::$app->user->getIdentity()->lockUnlock(Yii::$app->request->post('id'), true);
+            return $this->refresh();
+        }
+
+        return $this->render('administration', ['dataProvider' => Yii::$app->user->getIdentity()->allUsers()]);
+    }
+
+    public function actionProfile()
+    {
+        return $this->render('profile');
+    }
 }

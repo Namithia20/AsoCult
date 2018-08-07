@@ -60,8 +60,16 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
+            
+            $this->getUser();
 
-           return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            if($this->_user->bloqueado)
+            {$this->addError('username', 'The user is locked');}
+
+            if($this->_user->eliminado)
+            {$this->addError('username', 'The user is deleted');}
+
+           return Yii::$app->user->login($this->_user, $this->rememberMe ? 3600*24*30 : 0);
         }
         return false;
     }

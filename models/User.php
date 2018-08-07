@@ -8,6 +8,7 @@ use yii\mongodb\ActiveRecord;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
 use yii\mongodb\Query;
+use yii\data\ActiveDataProvider;
 
 class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -146,6 +147,26 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
     public function validatePassword($password)
     {
         return $this->password === sha1($password);
+    }
+
+    public static function allUsers()
+    {
+        $data = new ActiveDataProvider([
+            'query' => static::find(),
+            'pagination' => [
+                'pageSize' => 20,
+        ],
+        ]);
+
+        return $data;
+    }
+
+    public static function lockUnlock($id, $actualState)
+    {
+        $collection = Yii::$app->mongodb->getCollection('Usuario');
+       return $collection->update(['id' => (int)$id], ['bloqueado' => !$actualState] );
+
+        //return static::update(['id' => $id], ['bloqueado' => !$actualState] );
     }
 
 

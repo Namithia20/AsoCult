@@ -48,7 +48,12 @@ AppAsset::register($this);
     }
     else
     {
-        array_push($navItems, ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+        if(Yii::$app->user->getIdentity()->admin)
+        {
+            array_push($navItems, ['label' => 'Administration', 'url' => ['/site/administration']]);
+        }
+
+        array_push($navItems, ['label' => 'Profile', 'url' => ['/site/profile']], ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
         'url' => ['/site/logout'],
         'linkOptions' => ['data-method' => 'post']]
         );
