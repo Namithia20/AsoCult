@@ -18,7 +18,7 @@ class Work extends \yii\mongodb\ActiveRecord
     public $author;
     public $resume;
     public $type;
-    public $date;
+    public $date_public;
     public $id_creator;
 
 
@@ -31,7 +31,7 @@ class Work extends \yii\mongodb\ActiveRecord
     {
         return [
             [['title', 'author', 'type'], 'required'],
-            [['title', 'author'], 'string', 'max'=>100],
+            [['title', 'author', 'date_public'], 'string', 'max'=>100],
             [['resume'], 'string', 'max'=>250],
         ];
     }
@@ -44,7 +44,7 @@ class Work extends \yii\mongodb\ActiveRecord
             'author'=> 'Author',
             'resume' => 'Resume',
             'type' => 'Type',  
-            'date' => 'Date'          
+            'date_public' => 'Date'          
         ];
     }
 
@@ -55,7 +55,7 @@ class Work extends \yii\mongodb\ActiveRecord
          ];
     }
 
-    public static function registerWork($title, $author, $resume, $type, $date)
+    public function registerWork()
     {
         $query = new Query();
         $response = $query->select(['id'])
@@ -65,14 +65,14 @@ class Work extends \yii\mongodb\ActiveRecord
 
         $values =[
             'id' => $response,
-            'title' => $title,
-            'author'=> $author,
-            'resume' => $resume,
-            'type' => (int)$type,
-            'date' => $date,
+            'title' => $this->title,
+            'author'=> $this->author,
+            'resume' => $this->resume,
+            'type' => (int)$this->type,
+            'date_public' => $this->date_public,
             'id_creator' =>(int)Yii::$app->user->getIdentity()->getId(),
         ];
-       
+      var_dump($values);
        $collection = Yii::$app->mongodb->getCollection('Obra');
        return $collection->insert($values);
 
@@ -81,7 +81,7 @@ class Work extends \yii\mongodb\ActiveRecord
 
     public static function findWorkId($id)
     {
-        return static::findOne(['id' =>$id]);
+        return static::findOne(['id' =>(int)$id]);
     }
 
     /**

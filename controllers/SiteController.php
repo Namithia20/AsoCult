@@ -144,7 +144,6 @@ class SiteController extends Controller
     {        
         if(Yii::$app->request->post('accion') == 'lockUser' && Yii::$app->request->post('id') != null)
         {
-           //var_dump(Yii::$app->request->post());
             Yii::$app->user->getIdentity()->lockUnlock(Yii::$app->request->post('id'), false);
             return $this->refresh();
         }
@@ -171,6 +170,40 @@ class SiteController extends Controller
     public function actionMedioteca()
     {
         $model = new Work();
+
         return $this->render('medioteca', ['dataProvider' => $model->allWorks()]);
+    }
+
+    public function actionNewwork()
+    {
+        $model = new Work();
+
+        if (Yii::$app->request->post('create-button') == 'create-button' && $model->load(Yii::$app->request->post()))
+        {
+            if( !$model->registerWork())
+            {
+                return $this->render('createWork', ['model' => $model]);
+            }
+            return $this->render('workView', ['model' => $model]);
+        }
+        return $this->render('createWork', ['model' => $model]);
+    }
+
+    public function actionWorkview()
+    {
+        if(Yii::$app->request->get('id') != null)
+        {      
+            $model = new Work();
+            $model = Work::findWorkId(Yii::$app->request->get('id'));     
+
+            if($model!=null)
+            {
+                return $this->render('workView', ['model' => $model]);
+            }
+            else
+            {
+               throw new \yii\web\NotFoundHttpException();
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 $this->registerCssFile("/workspace/AsoCult/web/css/profile.css");
+$this->registerCssFile("/workspace/AsoCult/web/css/work.css");
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

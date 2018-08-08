@@ -1,0 +1,9 @@
+.work-data-container{
+    margin-top: 50px;
+}
+.work-data > h3{
+    display: inline !important;
+}
+.section-data{
+    padding: 20px !important;
+}

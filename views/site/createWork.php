@@ -7,16 +7,14 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Register';
+$this->title = 'New Work';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-register">
+<div class="site-form-work">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to register:</p>
-
     <?php $form = ActiveForm::begin([
-        'id' => 'register-form',
+        'id' => 'work-form',
         'layout' => 'horizontal',
         'fieldConfig' => [
             'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
@@ -24,18 +22,22 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <?= $form->field($model, 'title')->textInput(['autofocus' => true]) ?>
 
-        <?= $form->field($model, 'email')->textInput() ?>
+        <?= $form->field($model, 'author')->textInput() ?>
 
-        <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($model, 'resume')->textArea(['rows' => '6']) ?>
+
+        <?= $form->field($model, 'type')->dropDownList(['0'=>'Book', '1'=>'Music', '2'=>'Movie']) ?>
+
+        <?= $form->field($model, 'date_public')->textInput() ?>
         
         <div class="form-group">
             <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton('Register', ['class' => 'btn btn-primary', 'name' => 'register-button']) ?>
+                <?= Html::submitButton('Create', ['class' => 'btn btn-primary', 'name' => 'create-button', 'value'=>'create-button']) ?>
             </div>
         </div>
 
     <?php ActiveForm::end(); ?>
-
+    
 </div>
