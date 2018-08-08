@@ -142,19 +142,26 @@ class SiteController extends Controller
 
     public function actionAdministration()
     {        
-        if(Yii::$app->request->post('accion') == 'lockUser' && Yii::$app->request->post('id') != null)
+        if(!Yii::$app->user->isGuest && Yii::$app->user->getIdentity()->admin)
         {
-            Yii::$app->user->getIdentity()->lockUnlock(Yii::$app->request->post('id'), false);
-            return $this->refresh();
-        }
+            if(Yii::$app->request->post('accion') == 'lockUser' && Yii::$app->request->post('id') != null)
+            {
+                Yii::$app->user->getIdentity()->lockUnlock(Yii::$app->request->post('id'), false);
+                return $this->refresh();
+            }
 
-        if(Yii::$app->request->post('accion') == 'unlockUser' && Yii::$app->request->post('id') != null)
+            if(Yii::$app->request->post('accion') == 'unlockUser' && Yii::$app->request->post('id') != null)
+            {
+                Yii::$app->user->getIdentity()->lockUnlock(Yii::$app->request->post('id'), true);
+                return $this->refresh();
+            }
+
+            return $this->render('administration', ['dataProvider' => Yii::$app->user->getIdentity()->allUsers()]);
+        }
+        else
         {
-            Yii::$app->user->getIdentity()->lockUnlock(Yii::$app->request->post('id'), true);
-            return $this->refresh();
+            return $this->goHome();
         }
-
-        return $this->render('administration', ['dataProvider' => Yii::$app->user->getIdentity()->allUsers()]);
     }
 
     public function actionProfile()
