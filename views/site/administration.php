@@ -12,11 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-administration">
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        Admin panel:
-    </p>
-    <p>
+    <div>
     <?php 
         echo GridView::widget([
             'dataProvider' => $dataProvider,
@@ -27,10 +23,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => 'State', 
                     'value' =>function ($data){
-                        if($data->bloqueado)
+                        if($data->eliminado)
+                        { return 'Deleted';}
+                        else
+                        {
+                            if($data->bloqueado)
                             {return 'Lock';}
                             else
                             {return 'Unlock';}
+                        }
                     },
                 ],
                 [         
@@ -38,12 +39,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     'format' => 'raw',                   
                     'value' => function ($data){
 
-                        if($data != Yii::$app->user->getIdentity())
+                        if($data->id != Yii::$app->user->getIdentity()->id)
                         {
-                            if($data->bloqueado)
-                            {return Html::button('Unlock', ['class'=>'btn btn-primary', 'onclick' =>'lockUnlockUser("unlockUser", '.$data->id.')']);}
+                            if($data->eliminado)
+                            {return 'No action';}
                             else
-                            {return Html::button('Lock', ['class'=>'btn btn-primary', 'onclick' =>'lockUnlockUser("lockUser", '.$data->id.')']);}
+                            {
+                                if($data->bloqueado)
+                                {return Html::button('Unlock', ['class'=>'btn btn-primary', 'onclick' =>'lockUnlockUser("unlockUser", '.$data->id.')']);}
+                                else
+                                {return Html::button('Lock', ['class'=>'btn btn-primary', 'onclick' =>'lockUnlockUser("lockUser", '.$data->id.')']);}
+                            }
                         }
                         else
                         { return 'No action';}
@@ -53,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]);
     ?>
-    </p>
+    </div>
 
 </div>
 

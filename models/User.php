@@ -101,7 +101,6 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
         return static::findOne(['accessToken' => $token]);
         
     }
-
     
     /**
      * Finds user by username
@@ -163,11 +162,14 @@ class User extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterfa
 
     public static function lockUnlock($id, $actualState)
     {
-        $collection = Yii::$app->mongodb->getCollection('Usuario');
+       $collection = Yii::$app->mongodb->getCollection('Usuario');
        return $collection->update(['id' => (int)$id], ['bloqueado' => !$actualState] );
-
-        //return static::update(['id' => $id], ['bloqueado' => !$actualState] );
     }
 
+    public static function deleteUser($id)
+    {
+       $collection = Yii::$app->mongodb->getCollection('Usuario');
+       return $collection->update(['id' => (int)$id], ['eliminado' => true] );
+    }
 
 }

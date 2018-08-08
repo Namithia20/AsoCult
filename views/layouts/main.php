@@ -11,6 +11,7 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+$this->registerCssFile("/workspace/AsoCult/web/css/profile.css");
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -39,6 +40,7 @@ AppAsset::register($this);
     /** Editado para añadir botón de registro **/
     $navItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'Media Library', 'url' => ['/site/medioteca']],
         ['label' => 'About', 'url' => ['/site/about']],
         ['label' => 'Contact', 'url' => ['/site/contact']]
     ];

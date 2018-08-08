@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\RegisterForm;
+use app\models\Work;
 
 class SiteController extends Controller
 {
@@ -140,8 +141,7 @@ class SiteController extends Controller
     }
 
     public function actionAdministration()
-    {
-        
+    {        
         if(Yii::$app->request->post('accion') == 'lockUser' && Yii::$app->request->post('id') != null)
         {
            //var_dump(Yii::$app->request->post());
@@ -160,6 +160,17 @@ class SiteController extends Controller
 
     public function actionProfile()
     {
+        if(Yii::$app->request->post('accion') == 'delete' && Yii::$app->request->post('id') != null)
+        {
+            Yii::$app->user->getIdentity()->deleteUser(Yii::$app->request->post('id'));
+            return $this->actionLogout();
+        }
         return $this->render('profile');
+    }
+
+    public function actionMedioteca()
+    {
+        $model = new Work();
+        return $this->render('medioteca', ['dataProvider' => $model->allWorks()]);
     }
 }
