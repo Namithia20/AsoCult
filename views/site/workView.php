@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = 'Work Details';
+$this->params['breadcrumbs'][] = ['label'=>'Media Library', 'url'=> Url::to(['site/medioteca']) ];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-work-details">

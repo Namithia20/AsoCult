@@ -18,12 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="work-searcher">
         <form action="<?php echo Url::to(['site/medioteca'])?>" id="search-form" class="input-group pull-right col-md-4" method="get">
-            <select name="type">
+            <select name="type" class="form-control">
                 <option value="-1">All</option>
                 <option value="0">Book</option>
                 <option value="1">Music</option>
                 <option value="2">Movie</option>
             </select>
+            <span class="input-group-addon work-search-union" ></span>
             <input class="form-control" type="text" name="search" placeholder="Insert text...">  
             <input type="hidden" name="r" value="site/medioteca">
             <span class="input-group-btn">   
