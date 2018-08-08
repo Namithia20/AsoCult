@@ -6,12 +6,30 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
+use yii\bootstrap\ActiveForm;
+
+$data_search="";
 
 $this->title = 'Media Library';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-media-library">
     <h1><?= Html::encode($this->title) ?></h1>    
+
+    <div class="work-searcher">
+        <form action="<?php echo Url::to(['site/medioteca'])?>" id="search-form" class="input-group pull-right col-md-4" method="get">
+            <select name="type">
+                <option value="-1">All</option>
+                <option value="0">Book</option>
+                <option value="1">Music</option>
+                <option value="2">Movie</option>
+            </select>
+            <input class="form-control" type="text" name="search" placeholder="Insert text...">  
+            <input type="hidden" name="r" value="site/medioteca">
+            <span class="input-group-btn">   
+            <?= Html::submitButton('Search', ['class' => 'btn btn-primary btn-group', 'name' => 'search-button', 'value' => 'search-button']) ?> 
+        </form>        
+    </div>
     <div>
     <?php
         if(!Yii::$app->user->isGuest)
@@ -32,6 +50,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     'value' => function($data){
                         return Html::a($data->title, ['site/workview', 'id'=>$data->id]);
                     },
+                ],
+                [
+                    'label' => 'Type',
+                    'format' => 'raw',
+                    'value' => function($data){
+                        
+                        switch($data->type)
+                        {
+                            case 0: return 'Book';
+                            case 1: return 'Music';
+                            case 2: return 'Movie';
+                            default: return 'Others';
+                        }
+                    }
                 ],
             ],
         ]);

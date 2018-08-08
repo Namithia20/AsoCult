@@ -104,5 +104,31 @@ class Work extends \yii\mongodb\ActiveRecord
         return $data;
     }
 
+    public static function allWorksFilter($title, $type)
+    {
+
+        $query = static::find();
+
+        $data = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+        ],
+        ]);
+        
+        if((int)$type!=-1)
+        {
+
+            $query->where(['type'=> (int)$type]);
+            $query->andWhere(['like', 'title', $title]);
+            
+        }
+        else
+        {
+            $query->where(['like', 'title', $title]);
+        }
+
+        return $data;
+    }
 
 }

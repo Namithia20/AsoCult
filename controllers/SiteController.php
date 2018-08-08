@@ -170,23 +170,39 @@ class SiteController extends Controller
     public function actionMedioteca()
     {
         $model = new Work();
-
-        return $this->render('medioteca', ['dataProvider' => $model->allWorks()]);
+        
+        if(Yii::$app->request->get('search-button')=='search-button')
+        {
+            return $this->render('medioteca', ['dataProvider' => $model->allWorksFilter(Yii::$app->request->get('search'), Yii::$app->request->get('type'))]);
+        }
+        else
+        {
+            return $this->render('medioteca', ['dataProvider' => $model->allWorks()]);
+        }
+        
+        
     }
 
     public function actionNewwork()
-    {
-        $model = new Work();
+    {       
 
-        if (Yii::$app->request->post('create-button') == 'create-button' && $model->load(Yii::$app->request->post()))
+        if(!Yii::$app->user->isGuest)
         {
-            if( !$model->registerWork())
+            $model = new Work();
+            if (Yii::$app->request->post('create-button') == 'create-button' && $model->load(Yii::$app->request->post()))
             {
-                return $this->render('createWork', ['model' => $model]);
+                if( !$model->registerWork())
+                {
+                    return $this->render('createWork', ['model' => $model]);
+                }
+                return $this->render('workView', ['model' => $model]);
             }
-            return $this->render('workView', ['model' => $model]);
+            return $this->render('createWork', ['model' => $model]);
         }
-        return $this->render('createWork', ['model' => $model]);
+        else
+        {
+            return $this->actionMedioteca();
+        }
     }
 
     public function actionWorkview()
